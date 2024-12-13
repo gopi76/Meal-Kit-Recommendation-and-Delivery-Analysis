@@ -32,7 +32,11 @@ A comprehensive meal kit delivery service analysis system that provides recipe r
 ### Backend
 - Java (Core Technology)
 - Selenium WebDriver
+- SpringBoot, Maven
 - Jsoup HTML Parser
+
+### FrontEnd
+- Angular
 
 ### Data Structures
 - AVL Trees
