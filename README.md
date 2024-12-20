@@ -1,7 +1,7 @@
 # Meal Kit Delivery Service Analysis System
 
 ## Overview
-A comprehensive meal kit delivery service analysis system that provides recipe recommendations, search functionalities, and user interaction features. The system crawls multiple meal kit delivery websites, processes the data, and presents it through an intuitive interface.
+A comprehensive meal kit delivery service analysis system that provides recipe recommendations, search functionalities, and user interaction features. The system crawls multiple meal kit delivery websites, processes the data, and presents it through an intuitive interface..
 
 ## Features
 
