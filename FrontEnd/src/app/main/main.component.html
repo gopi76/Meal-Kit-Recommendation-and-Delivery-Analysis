@@ -1,0 +1,134 @@
+<div class="meal-kit-analysis">
+  <h1 class="title">Meal Kit Analysis and Recommendation System</h1>
+
+ <div class="search-section">
+  <h2>Search Meal Kit Services</h2>
+  <form [formGroup]="searchForm" (ngSubmit)="searchRecipes()">
+    <input type="text" formControlName="searchTerm" placeholder="Enter search terms..." (input)="onSearchInput()">
+    <button type="submit" [disabled]="!searchForm.valid">Search</button>
+  </form>
+
+  <!-- Dropdown for Word Completions -->
+  <div *ngIf="wordCompletions.length > 0" class="autocomplete-dropdown">
+    <ul>
+      <li *ngFor="let word of wordCompletions" (click)="selectWord(word)">
+        {{ word }}
+      </li>
+    </ul>
+  </div>
+  
+  <!-- Display suggested words if wordCompletions is empty -->
+  <div *ngIf="wordCompletions.length === 0 && wordSuggested.length > 0" class="suggested-words">
+    <p>Did you mean:</p>
+    <ul>
+      <li *ngFor="let word of wordSuggested" (click)="onSuggestedWordSelect(word)">
+        {{ word }}
+      </li>
+    </ul>
+  </div>
+  
+    <div class="pattern-search-section" *ngIf="patternMatches && patternMatches.length > 0">
+      <h3>Pattern Matches</h3>
+      <div class="pattern-matches">
+        <div *ngFor="let match of patternMatches" class="pattern-match-item">
+          <p>Matched Recipe: {{ match.name }}</p>
+          <p>Pattern Occurrence: Highlighted in recipe name</p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="spellCheckResults.length > 0" [@fadeInOut]>
+      <p class="error">Possible misspellings: {{ spellCheckResults.join(', ') }}</p>
+    </div>
+    <div *ngFor="let item of scrapedDataFrequencies | keyvalue" class="frequency-item">
+      <p>Word: {{ item.key }} - Frequency: {{ item.value }}</p>
+    </div>
+    <div>
+      <table>
+        <tbody>
+          <tr *ngFor="let item of searchHistory">
+            <td>{{ item.word }}</td>
+            <td>{{ item.frequency}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div> 
+
+  <!-- New Recipe Scroller Container -->
+<div class="recipe-container">
+  <h2>Recipe Highlights</h2>
+  <div class="recipe-scroller">
+    <div class="recipe-card" *ngFor="let service of randomRecipes">
+      <a [href]="service.websiteURL" target="_blank">
+        <img [src]="service.imageUrl" alt="{{ service.name }}" class="recipe-image" />
+      </a>
+      <p class="recipe-name">{{ service.name }}</p>
+    </div>
+  </div>
+</div>
+  
+
+  <div class="requirements-section">
+    <h2>Your Requirements</h2>
+    <form [formGroup]="requirementsForm" (ngSubmit)="generateRecommendations()">
+      <div class="form-group">
+        <label for="maxWeeklyCost">Max Weekly Cost ($)</label>
+        <input type="number" id="maxWeeklyCost" formControlName="maxWeeklyCost">
+      </div>
+      <div class="form-group">
+        <label for="minServingsPerMeal">Min Servings per Meal</label>
+        <input type="number" id="minServingsPerMeal" formControlName="minServingsPerMeal">
+      </div>
+      <div formGroupName="dietaryPreferences">
+        <h3>Dietary Preferences</h3>
+        <label><input type="checkbox" formControlName="vegetarian"> Vegetarian</label>
+        <label><input type="checkbox" formControlName="vegan"> Vegan</label>
+        <label><input type="checkbox" formControlName="keto"> Keto</label>
+        <label><input type="checkbox" formControlName="glutenFree"> Gluten-Free</label>
+      </div>
+      <button type="submit">Generate Recommendations</button>
+    </form>
+  </div>
+
+  <div class="results-section">
+    <h2>Recommended Meal Kit Services</h2>
+    <table *ngIf="filteredServices.length > 0; else noResults">
+      <thead>
+        <tr>
+          <th>Website</th>
+          <th>Name</th>
+          <th>Cooking Time</th>
+          <th>Serves</th>
+          <th>Price</th>
+          <th>Dietary Options</th>
+          <th>Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let service of filteredServices">
+          <td>{{service.websiteName}}</td>
+          <td><a [href]="service.websiteURL" target="_blank">
+            <span [innerHTML]="highlightPattern(service.name)">
+              
+            </span>{{ service.name }}</a></td>
+          <td>{{ service.cookingTime }}</td>
+          <td>{{ service.serves }}</td>
+          <td>{{ service.price }}</td>
+          <td>{{ service.dietaryOptions.join(', ') }}</td>
+          <td>
+            <a [href]="service.recipeUrl" target="_blank">
+              <img
+                width="100"
+                [src]="service.imageUrl"
+                [alt]="service.name"
+              />
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noResults>
+      <p>No results found. Try adjusting your search terms or criteria.</p>
+    </ng-template>
+  </div>
+</div>
